@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./src/imgs/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Di tích lịch sử ở Hà Nội</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+
+  <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/0.1.0-beta.4/libs/oversea/index.js"></script>
+  <script>
+    function lookInSession(key) {
+      const sessionData = sessionStorage.getItem(key);
+      return sessionData ? JSON.parse(sessionData) : null;
+    }
+
+    function initChat() {
+      if (window.chatClient) return;
+
+      const user = lookInSession("user");
+      if (user) {
+        const bot_id = "7386679675701100545";
+        const title = "Hướng Dẫn Viên Di Tích Lịch Sử Hà Nội";
+        const icon =
+          "https://upload.wikimedia.org/wikipedia/commons/1/18/Emblem_of_Hanoi.svg";
+
+        // console.log("User data from session:", user);
+
+        window.chatClient = new CozeWebSDK.WebChatClient({
+          config: { bot_id },
+          componentProps: { title, icon },
+        });
+      }
+    }
+
+    function removeChat() {
+      if (window.chatClient) {
+        console.log("Removing CozeWebSDK...");
+        window.chatClient.destroy();
+        window.chatClient = null;
+      }
+    }
+
+    setInterval(() => {
+      const user = lookInSession("user");
+      if (user) {
+        initChat();
+      } else {
+        removeChat();
+      }
+    }, 1000);
+  </script>
+</html>
